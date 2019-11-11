@@ -9,7 +9,7 @@ Aquele trabalho que trazem pensamentos suicídas a uma cabeça já perturbada.
 
 ## Utilidades
 
-- [**Link para o enunciado**](https://www.ic.unicamp.br/~edson/disciplinas/mc404/2019-2s/ab/index.html)
+- [**Link para o enunciado**](https://www.ic.unicamp.br/~edson/disciplinas/mc404/2019-2s/ab/labs/t2/t2.html)
 - [Link para o simulador](https://www.ic.unicamp.br/~edson/disciplinas/mc404/2019-2s/ab/index.html)
 - [Link para o tratamento de chamdas de sistema (aka lab10)](https://www.ic.unicamp.br/~edson/disciplinas/mc404/2019-2s/ab/labs/lab10/lab10.html)
 
