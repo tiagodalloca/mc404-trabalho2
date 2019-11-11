@@ -18,4 +18,7 @@ Aquele trabalho que trazem pensamentos suicídas a uma cabeça já perturbada.
 - [`loco.c`](./loco.c): Implementação da camada LoCo
 - [`bico.s`](./bico.s): Implementação da camada BiCo
 - [`soul.s`](./soul.s): Implementação da camada SOUL
-- [`grupo.txt`](./grupo.txt): descrito abaixo
+- [`grupo.txt`](./grupo.txt): Arquivo com os RAs dos integrantes do grupo
+
+
+BORA ARREBENTAR 🔥
