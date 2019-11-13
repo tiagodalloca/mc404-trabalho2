@@ -24,3 +24,5 @@ git log:
 
 git diff COMMIT_ANTERIOR [HEAD|OUTRO_COMMIT]:
   vê diferença no código entre os commits
+
+por enquanto eh isso.
