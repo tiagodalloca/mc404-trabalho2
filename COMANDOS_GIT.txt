@@ -1,0 +1,26 @@
+COMANDOS GIT:
+
+git status:
+  ver alterações antes do commit
+
+git add [varios arquivos OU .]:
+  adiciona alterações para serem commitadas
+
+git commit -m "Mensagem":
+  commita
+
+git push:
+  envia commits feitos para o servidor
+
+git pull:
+  pega as alterações feitas.
+  OBS MUITO IMPORTANTE: VOCE TEM QUE COMMITAR SUAS ALTERAÇÕES ANTES DESSE COMANDO!
+  outra obs: se ocorrer conflito, chamar o Tiago.
+
+---
+
+git log:
+  vê commits já feitos (q para sair)
+
+git diff COMMIT_ANTERIOR [HEAD|OUTRO_COMMIT]:
+  vê diferença no código entre os commits
