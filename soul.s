@@ -32,6 +32,7 @@ guarda_contexto:
     sw sp, 108(t6)
     sw gp, 112(t6)
     sw tp, 116(t6) 
+    # HUEEEE
 
 
 Verifica_qual_e_a_syscall:
