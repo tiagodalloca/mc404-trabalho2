@@ -2,6 +2,7 @@
 set_torque:
 	li a7, 18
 	ecall
+	ret
 
 .globl set_torque
 set_torque:
@@ -20,4 +21,5 @@ set_torque:
 
 	lw ra, 0(sp)
 	lw a1, 4(sp)
+	ret
 
