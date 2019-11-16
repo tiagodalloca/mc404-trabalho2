@@ -1,8 +1,6 @@
 # TODO:
 #		puts ->											tem que percorrer um string
-#		set_time ->									fácil
 #		get_gyro_angles ->					vetor
-#		get_current_GPS_position -> vetor
 
 .globl set_engine_torque
 set_torque:
@@ -53,3 +51,17 @@ set_time:
 	ecall
 	ret
 
+.globl get_current_GPS_position
+get_current_GPS_position:
+	la t0, a0
+	la t1, 4(a0)
+	la t2, 8(a0)
+	
+	slli t0, t0, 20
+	slli t1, t1, 10
+	or t0, t0, t1
+	or t0, t0, t2
+	
+	lw a0, t0
+	ecall
+	ret
