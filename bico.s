@@ -34,4 +34,9 @@ get_us_distance:
 	li a7, 16
 	ecall
 	ret
-	
+
+.globl get_time
+get_time:
+	li a7, 21
+	ecall
+	ret
