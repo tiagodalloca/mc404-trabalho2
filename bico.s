@@ -29,4 +29,9 @@ set_head_servo:
 	ecall
 	ret
 
+.globl get_us_distance
+get_us_distance:
+	ecall
+	ret
+
 
