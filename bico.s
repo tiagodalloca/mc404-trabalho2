@@ -31,7 +31,7 @@ set_head_servo:
 
 .globl get_us_distance
 get_us_distance:
+	li a7, 16
 	ecall
 	ret
-
-
+	
