@@ -47,4 +47,9 @@ get_time:
 	ecall
 	ret
 
+.globl set_time
+set_time:
+	li a7, 22
+	ecall
+	ret
 
