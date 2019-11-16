@@ -23,3 +23,10 @@ set_torque:
 	lw a1, 4(sp)
 	ret
 
+.globl set_head_servo
+set_head_servo:
+	li a7, 17
+	ecall
+	ret
+
+
