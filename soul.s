@@ -85,11 +85,11 @@ set_servo_angles: #Código: 17
     li t4, 1 # t4 = 1
 
     bgt t0, t3, fim_do_set # if t0 > t3 then fim_do_set
-    blt t0, t2, fim_so_set # if t0 < t2 then fim_so_set
+    blt t0, t2, fim_do_set # if t0 < t2 then fim_so_set
     addi a0, a0, 1 # a0 = a0 + 1
 
-    beq t0, t2, base# if t0 == t1 then base
-    beq t0, t4, base # if t0 == t4 then mid
+    beq t0, t2, set_base# if t0 == t1 then base
+    beq t0, t4, set_mid # if t0 == t4 then mid
 
     set_top:
         li t2,0  # t2 =0 
@@ -365,4 +365,7 @@ la t0, user # Grava o endereço do rótulo user
 csrw mepc, t0 # no registrador mepc
 mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
 clock: .word 1
+reg_buffer: .skip 4
 .align 4
+
+user:
