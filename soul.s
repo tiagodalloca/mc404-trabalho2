@@ -98,7 +98,8 @@ set_servo_angles: #Código: 17
         blt t1, t2, fim_do_set # if t1 < t2 then fim_do_set
         addi a0, a0, 1; # a0 = a0 + 1
 
-        sw t1, 0xFFFF001C # guarda o angulo
+        li t5, 0xFFFF001C
+        sw t1, 0(t5) # guarda o angulo
         j fim_do_set  # jump to fim_do_set
         
     set_mid:
@@ -311,8 +312,8 @@ recupera_contexto:
 
 .globl _start
 _start:
-
-sw zero, clock #set clock
+la t1, clock
+sw zero, 0(t1) #set clock
 li t0, 0xFFFF0100
 li t1, 0xFFFF0104
 li t2, 100

@@ -1,7 +1,7 @@
 # TODO: testar
 
 .globl set_engine_torque
-set_torque:
+set_engine_torque:
 	li a7, 18
 	ecall
 	ret
@@ -13,7 +13,7 @@ set_torque:
 	sw a1, 4(sp)
 	sw ra, 0(sp)
 
-	lw a1, a0
+	mv a1, a0
 	li a0, 0
 	jal set_torque
 
@@ -51,32 +51,36 @@ set_time:
 
 .globl get_current_GPS_position
 get_current_GPS_position:
-	la t0, a0
-	la t1, 4(a0)
-	la t2, 8(a0)
+	mv t0, a0
+	addi a0, a0, 4
+	mv t1, a0
+	addi a0, a0, 4
+	mv t2, a0
 	
 	slli t0, t0, 20
 	slli t1, t1, 10
 	or t0, t0, t1
 	or t0, t0, t2
 	
-	lw a0, t0
+	mv a0, t0
 	li a7, 19
 	ecall
 	ret
 
 .globl get_gyro_angles
 get_gyro_angles:
-	la t0, a0
-	la t1, 4(a0)
-	la t2, 8(a0)
+	mv t0, a0
+	addi a0, a0, 4
+	mv t1, a0
+	addi a0, a0, 4
+	mv t2, a0
 	
 	slli t0, t0, 20
 	slli t1, t1, 10
 	or t0, t0, t1
 	or t0, t0, t2
 	
-	lw a0, t0
+	mv a0, t0
 	li a7, 20
 	ecall
 	ret
@@ -84,7 +88,7 @@ get_gyro_angles:
 .globl puts
 puts:
 	li t0, 0
-	li t2, a0
+	mv t2, a0
 	li t3, 0			
 	count_bytes:
 		addi t0, t0, 1
@@ -92,8 +96,8 @@ puts:
 		addi t2, t2, 1
 		beq t1, t3, count_bytes
 
-	lw a1, a0
+	mv a1, a0
 	li a0, 0
-	lw a2, t1
+	mv a2, t1
 	ecall
 	ret
