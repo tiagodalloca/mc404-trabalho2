@@ -32,97 +32,239 @@ guarda_contexto:
     sw sp, 108(t6)
     sw gp, 112(t6)
     sw tp, 116(t6) 
-    # HUEEEE
-
+    
 
 Verifica_qual_e_a_syscall:
 
+    li t0, 99 # t0 = 99
+    beq t0, a7, GPT # if t0 == a7 then GPT
+
     li t0, 64 # t0 = 64
-    beq t0, a7, write; # if t0 == a7 then write
+    beq t0, a7, write # if t0 == a7 then write
 
     li t0, 22 # t0 = 22
-    beq t0, a7, set_time; # if t0 == a7 then set_time
+    beq t0, a7, set_time # if t0 == a7 then set_time
 
     li t0, 21 # t0 = 21
-    beq t0, a7, get_time; # if t0 == a7 then get_time
+    beq t0, a7, get_time # if t0 == a7 then get_time
 
     li t0, 20 # t0 = 20
-    beq t0, a7, read_gyroscope; # if t0 == a7 then read_gyroscope
+    beq t0, a7, read_gyroscope # if t0 == a7 then read_gyroscope
 
     li t0, 19 # t0 = 19
-    beq t0, a7, read_gps; # if t0 == a7 then read_gps
+    beq t0, a7, read_gps # if t0 == a7 then read_gps
 
     li t0, 18 # t0 = 18
-    beq t0, a7, set_engine_torque; # if t0 == a7 then set_engine_torque
+    beq t0, a7, set_engine_torque # if t0 == a7 then set_engine_torque
 
     li t0, 17 # t0 = 17
-    beq t0, a7, set_servo_angles; # if t0 == a7 then set_servo_angles
+    beq t0, a7, set_servo_angles # if t0 == a7 then set_servo_angles
 
     li t0, 16 # t0 = 16
-    beq t0, a7, read_ultrasonic_sensor; # if t0 == a7 then read_ultrasonic_sensorx
+    beq t0, a7, read_ultrasonic_sensor # if t0 == a7 then read_ultrasonic_sensorx
 
 
 read_ultrasonic_sensor: #Código: 16
-    sw zero, 0xFFFF0020 
+    li t0, 0xFFFF0020
+    sw zero, 0(t0)
     medir_sensor:
-        lw t0, 0xFFFF0020 
-        bne t0, zero, medir_sensor # if t0 != zero then medir_sensor
-    lw a0, 0xFFFF0024 # 
-    
-    bge t0, zero, objeto_detectado # if t0 >= zero then objeto_detectado
-
-
-
-    objeto_detectado:
-    
-
+        lw t0, 0(t0)
+        beq t0, zero, medir_sensor # if t0 != zero then medir_sensor
+    li t0, 0xFFFF0024  
+    lw a0, 0(t0) #coloca o valor do sensor em a0 
     j pos_a0  # jump to pos_a0
 
 
 set_servo_angles: #Código: 17
 
+    addi t0, a0, 0 # t0 = a0 + 0
+    addi t1, a1, 0 # t1 = a1 + 0
+    li a0, -2 # a0 = -2
+    li t2, 0 # t1 = 0
+    li t3, 2 # t3 = 2
+    li t4, 1 # t4 = 1
 
+    bgt t0, t3, fim_do_set # if t0 > t3 then fim_do_set
+    blt t0, t2, fim_so_set # if t0 < t2 then fim_so_set
+    addi a0, a0, 1 # a0 = a0 + 1
+
+    beq t0, t2, base# if t0 == t1 then base
+    beq t0, t4, base # if t0 == t4 then mid
+
+    set_top:
+        li t2,0  # t2 =0 
+        li t3,156  # t3 = 156
+        bgt t1, t3, fim_do_set # if t1 > t3 then fim_do_set
+        blt t1, t2, fim_do_set # if t1 < t2 then fim_do_set
+        addi a0, a0, 1; # a0 = a0 + 1
+
+        sw t1, 0xFFFF001C # guarda o angulo
+        j fim_do_set  # jump to fim_do_set
+        
+    set_mid:
+        li t2,52  # t2 = 52
+        li t3,90  # t3 = 90
+        bgt t1, t3, fim_do_set # if t1 > t3 then fim_do_set
+        blt t1, t2, fim_do_set # if t1 < t2 then fim_do_set
+        addi a0, a0, 1; # a0 = a0 + 1
+
+        li t5, 0xFFFF001D
+        sw t1, 0(t5) # guarda o angulo
+        j fim_do_set  # jump to fim_do_set
+
+    set_base:
+        li t2,16  # t2 = 16
+        li t3,16  # t3 = 116
+        bgt t1, t3, fim_do_set # if t1 > t3 then fim_do_set
+        blt t1, t2, fim_do_set # if t1 < t2 then fim_do_set
+        addi a0, a0, 1 # a0 = a0 + 1
+
+        li t5, 0xFFFF001E
+        sw t1, 0(t5) # guarda o angulo
+
+    fim_do_set:
     j pos_a0  # jump to pos_a0
 
 
 set_engine_torque: #Código: 18
 
+    addi t0, a0, 0 # t0 = a0 + 0
+    addi t1, a1, 0 # t1 = a1 + 0
+    li a0, -1 # a0 = -1
+    li t2, 1 #t2 = 1
+    li s1, 0xFFFF001A 
+    li s2, 0xFFFF0018
+    li s3, 0xFFFF0004
+    li s4, 0xFFFF0008 
+    li s5, 0xFFFF000C 
+    li s6, 0xFFFF0010
 
+    beq t0, zero, set_engine_0 # if t0 == zero then set_engine_0
+    beq t0, t2, set_engine_1 # if t0 == t2 then set_engine_1
     j pos_a0  # jump to pos_a0
 
+    set_engine_0:
+        li a0, 0 # a0 = 0
+        sw t1, 0(s1) # guarda o torque
+        j pos_a0  # jump to pos_a0
+
+    set_engine_1:
+        li a0, 0 # a0 = 0
+        sw t1, 0(s2) # guarda o torque
+        j pos_a0  # jump to pos_a0
 
 read_gps: #Código: 19
 
+    #t0 = pos x
+    srli t0, a0, 20
 
+    #t1 = pos y
+    slli t1, a0, 12
+    srli t1, t1, 22
+
+    #t2 = pos z
+    slli t2, a0, 22
+    srli t2, t2, 22
+
+    chama_o_gps:
+        sw zero, 0(s3)
+    gps_nao_lido:
+        lw t3, 0(s3)
+        beq t3, zero, gps_nao_lido # if t0 != zero then gps_nao_lido
+
+    #t4 = x
+    lw t4, 0(s4)
+    #t5 = y
+    lw t5, 0(s5)
+    #s4 = z
+    lw s4, 0(s6)	 
+    
+    sw t4, 0(t0) #guarda o x
+    sw t5, 0(t1) #guarda o y
+    sw s4, 0(t2) #guarda o z
+    
     j recupera_contexto  # jump to recupera_contexto
 
 
 read_gyroscope: #Código: 20
 
+    li s1, 0xFFFF0004 
+    li s2, 0xFFFF0014
 
+    #t0 = pos x
+    srli t0, a0, 20
+
+    #t1 = pos y
+    slli t1, a0, 12
+    srli t1, t1, 22
+
+    #t2 = pos z
+    slli t2, a0, 22
+    srli t2, t2, 22
+
+    chama_a_leitura:
+        sw zero, 0(s1)
+    leitura:
+        lw t3, 0(s1)
+        beq t3, zero, leitura # if t0 != zero then leitura
+
+    lw t3, 0(s2)
+
+    #t4 = x
+    srli t4, t3, 20
+
+    #t5 = y
+    slli t5, t3, 12
+    srli t5, t5, 22
+
+    #s4 = z
+    slli s4, t3, 22
+    srli s4, s4, 22
+
+    sw t4, 0(t0) #guarda o x
+    sw t5, 0(t1) #guarda o y
+    sw s4, 0(t2) #guarda o z
     j recupera_contexto  # jump to recupera_contexto
 
-
 get_time: #Código: 21
-
-
+    la t0, clock
+    lw a0, 0(t0)
     j pos_a0  # jump to pos_a0
 
 
 set_time: #Código: 22
-
-
+    la t0, clock
+    sw a0, 0(t0) #   
     j recupera_contexto  # jump to recupera_contexto
 
 
 write: #Código: 64
+    li t0, 1 # t0 = 1
+    li t1, 0xFFFF0108
+    li t2, 0xFFFF0109
+    li t3, 0	
 
+    escreve:
+        lb t4, 0(a1)
+        sb t4, 0(t2)
+        sw t0, 0(t1)
+        espera:
+            lw t5, 0(t1)
+            bne t5, zero, espera # if t5 != zero then espera
+        addi t3, t3, 1; # t3 = t3 + 1
+        addi t1, t1, 1; # t1 = t1 + 1
+        bne t3, a2, escreve # if t3 != a2 then escreve
 
     j pos_a0  # jump to pos_a0
 
-
-
-
+GPT: #Codigo 99
+    li t0, 0xFFFF0100
+    li t1, 0xFFFF0104
+    li t2, 100
+   	
+    sw t2, 0(t0)
+    sw zero, 0(t1)  
+    
 recupera_contexto:
     lw a0, 0(t6)
     pos_a0:
@@ -169,6 +311,34 @@ recupera_contexto:
 
 .globl _start
 _start:
+
+sw zero, clock #set clock
+li t0, 0xFFFF0100
+li t1, 0xFFFF0104
+li t2, 100
+li t3, 1
+sw t3, 0(t1)
+sw t2, 0(t0)
+li a7, 99
+
+#set motors
+li t0, 0xFFFF0018
+li t1, 0xFFFF001A
+lw zero, 0(t0)
+lw zero, 0(t1)  
+
+#set articulacoes
+li t0, 0xFFFF001E
+li t1, 0xFFFF001D	
+li t2, 0xFFFF001C
+li t3, 31
+li t4, 80
+li t5, 78
+
+sw t3, 0(t0)
+sw t4, 0(t1)  
+sw t5, 0(t2)
+
 # Configura o tratador de interrupções
 la t0, tratador_de_interrupcoes # Grava o endereço do rótulo int_handler
 csrw mtvec, t0 # no registrador mtvec
@@ -185,7 +355,6 @@ csrw mie, t1
 la t1, reg_buffer # Coloca o endereço do buffer para salvar
 csrw mscratch, t1 # registradores em mscratch
 li sp, 100000000#seta o endereço da pilha
-
 # Muda para o Modo de usuário
 csrr t1, mstatus # Seta os bits 11 e 12 (MPP)
 li t2, ~0x1800 # do registrador mstatus
@@ -194,5 +363,5 @@ csrw mstatus, t1
 la t0, user # Grava o endereço do rótulo user
 csrw mepc, t0 # no registrador mepc
 mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
-
+clock: .word 1
 .align 4
