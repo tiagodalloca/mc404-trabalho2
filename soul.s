@@ -36,9 +36,6 @@ guarda_contexto:
 
 Verifica_qual_e_a_syscall:
 
-    li t0, 99 # t0 = 99
-    beq t0, a7, GPT # if t0 == a7 then GPT
-
     li t0, 64 # t0 = 64
     beq t0, a7, write # if t0 == a7 then write
 
@@ -62,6 +59,13 @@ Verifica_qual_e_a_syscall:
 
     li t0, 16 # t0 = 16
     beq t0, a7, read_ultrasonic_sensor # if t0 == a7 then read_ultrasonic_sensorx
+
+    li t0, 9 # t0 = 9
+    beq t0, a7, GPT # if t0 == a7 then GPT
+
+    li t0, 11 # t0 = 11
+    beq t0, a7, GPT # if t0 == a7 then GPT
+
 
 
 read_ultrasonic_sensor: #Código: 16
@@ -258,11 +262,12 @@ write: #Código: 64
 
     j pos_a0  # jump to pos_a0
 
-GPT: #Codigo 99
+GPT: #interrupcao externa (clock)
     li t0, 0xFFFF0100
     li t1, 0xFFFF0104
     li t2, 100
    	
+    beq zero, t1, recupera_contexto # interrupcao falsa    
     sw t2, 0(t0)
     sw zero, 0(t1)  
     
@@ -315,12 +320,8 @@ _start:
 la t1, clock
 sw zero, 0(t1) #set clock
 li t0, 0xFFFF0100
-li t1, 0xFFFF0104
 li t2, 100
-li t3, 1
-sw t3, 0(t1)
 sw t2, 0(t0)
-li a7, 99
 
 #set motors
 li t0, 0xFFFF0018
@@ -361,11 +362,9 @@ csrr t1, mstatus # Seta os bits 11 e 12 (MPP)
 li t2, ~0x1800 # do registrador mstatus
 and t1, t1, t2 # com o valor 00
 csrw mstatus, t1
-la t0, user # Grava o endereço do rótulo user
+la t0, main # Grava o endereço do rótulo user
 csrw mepc, t0 # no registrador mepc
 mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
 clock: .word 1
 reg_buffer: .skip 4
 .align 4
-
-user:
