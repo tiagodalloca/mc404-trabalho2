@@ -15,14 +15,16 @@ set_torque:
 
 	mv a1, a0
 	li a0, 0
-	jal set_torque
+	jal set_engine_torque
 
 	lw a1, 4(sp)
 	li a0, 1
-	jal set_torque
+	jal set_engine_torque
 
 	lw ra, 0(sp)
 	lw a1, 4(sp)
+	lw a0, 8(sp)
+	addi sp, sp, 12
 	ret
 
 .globl set_head_servo
