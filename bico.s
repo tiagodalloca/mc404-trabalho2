@@ -102,7 +102,7 @@ puts:
 	fim:
 
 	mv a1, a0
-	li a0, 0
+	li a0, 1
 	mv a2, t0
 	li a7, 64
 	ecall

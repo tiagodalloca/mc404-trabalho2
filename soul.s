@@ -238,21 +238,44 @@ set_time: #Código: 22
 
 
 write: #Código: 64
-    li t0, 1 # t0 = 1
-    li t1, 0xFFFF0108
-    li t2, 0xFFFF0109
-    li t3, 0
 
+    beq a0, zero, le; # ve se é pra ler ou escrever
+    
     escreve:
+        li t0, 1 # t0 = 1
+        li t1, 0xFFFF0108
+        li t2, 0xFFFF0109
+        li t3, 0
+
         lb t4, 0(a1)
         sb t4, 0(t2)
         sw t0, 0(t1)
-        espera:
+        esperae:
             lb t5, 0(t1)
-            bne t5, zero, espera # if t5 != zero then espera
+            bne t5, zero, esperae # if t5 != zero then esperae
         addi t3, t3, 1; # t3 = t3 + 1
         addi a1, a1, 1
         bne t3, a2, escreve # if t3 != a2 then escreve
+        mv  a0, a2 # a0 = a2
+
+    j pos_a0  # jump to pos_a0
+
+    le:
+        li t0, 1 # t0 = 1
+        li t1, 0xFFFF010A
+        li t2, 0xFFFF010B
+        li t3, 0
+
+        lb t4, 0(a1)
+        sb t4, 0(t2)
+        sw t0, 0(t1)
+        esperal:
+            lb t5, 0(t1)
+            bne t5, zero, esperal # if t5 != zero then esperal
+        addi t3, t3, 1; # t3 = t3 + 1
+        addi a1, a1, 1
+        bne t3, a2, le # if t3 != a2 then escreve
+        mv  a0, a2 # a0 = a2
 
     j pos_a0  # jump to pos_a0
 
@@ -368,6 +391,5 @@ mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
 .align 4
 clock: .skip 4
 reg_buffer: .skip 32000
-stack_pointer:
-.skip 32000
+stack_pointer:.skip 32000
 .align 4
