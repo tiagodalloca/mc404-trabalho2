@@ -60,12 +60,7 @@ Verifica_qual_e_a_syscall:
     li t0, 16 # t0 = 16
     beq t0, a7, read_ultrasonic_sensor # if t0 == a7 then read_ultrasonic_sensorx
 
-    li t0, 9 # t0 = 9
-    beq t0, a7, GPT # if t0 == a7 then GPT
-
-    li t0, 11 # t0 = 11
-    beq t0, a7, GPT # if t0 == a7 then GPT
-
+    blt a7, zero, GPT # if t0 < t1 then GPT
 
 
 read_ultrasonic_sensor: #Código: 16
@@ -266,9 +261,14 @@ GPT: #interrupcao externa (clock)
     li t0, 0xFFFF0100
     li t1, 0xFFFF0104
     li t2, 100
-   	
-    beq zero, t1, recupera_contexto # interrupcao falsa    
-    sw t2, 0(t0)
+    lw t3, 0(t1)
+    la t4, clock
+    lw t5, 0(t5)  
+     
+    beq zero, t3, recupera_contexto # interrupcao falsa
+
+    addi t5, t5, 100 # incrementa clock
+    sw t2, 0(t0)  
     sw zero, 0(t1)  
     
 recupera_contexto:
@@ -365,6 +365,6 @@ csrw mstatus, t1
 la t0, main # Grava o endereço do rótulo user
 csrw mepc, t0 # no registrador mepc
 mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
-clock: .word 1
+clock: .skip 4
 reg_buffer: .skip 4
 .align 4
