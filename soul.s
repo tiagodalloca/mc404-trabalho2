@@ -241,7 +241,7 @@ write: #Código: 64
     li t0, 1 # t0 = 1
     li t1, 0xFFFF0108
     li t2, 0xFFFF0109
-    li t3, 0	
+    li t3, 0
 
     escreve:
         lb t4, 0(a1)
@@ -251,7 +251,7 @@ write: #Código: 64
             lb t5, 0(t1)
             bne t5, zero, espera # if t5 != zero then espera
         addi t3, t3, 1; # t3 = t3 + 1
-        addi t1, t1, 1; # t1 = t1 + 1
+        addi a1, a1, 1
         bne t3, a2, escreve # if t3 != a2 then escreve
 
     j pos_a0  # jump to pos_a0
@@ -355,7 +355,7 @@ csrw mie, t1
 # Ajusta o mscratch
 la t1, reg_buffer # Coloca o endereço do buffer para salvar
 csrw mscratch, t1 # registradores em mscratch
-li sp, 100000000#seta o endereço da pilha
+la sp, stack_pointer #seta o endereço da pilha
 # Muda para o Modo de usuário
 csrr t1, mstatus # Seta os bits 11 e 12 (MPP)
 li t2, ~0x1800 # do registrador mstatus
@@ -364,6 +364,10 @@ csrw mstatus, t1
 la t0, main # Grava o endereço do rótulo user
 csrw mepc, t0 # no registrador mepc
 mret # PC <= MEPC; MIE <= MPIE; Muda modo para MPP
+
+.align 4
 clock: .skip 4
-reg_buffer: .skip 4
+reg_buffer: .skip 32000
+stack_pointer:
+.skip 32000
 .align 4
