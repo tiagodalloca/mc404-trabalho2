@@ -79,15 +79,14 @@ set_servo_angles: #Código: 17
     addi t0, a0, 0 # t0 = a0 + 0
     addi t1, a1, 0 # t1 = a1 + 0
     li a0, -2 # a0 = -2
-    li t2, 0 # t1 = 0
-    li t3, 2 # t3 = 2
-    li t4, 1 # t4 = 1
+    li t3, 2 
+    li t4, 1 
 
     bgt t0, t3, fim_do_set # if t0 > t3 then fim_do_set
-    blt t0, t2, fim_do_set # if t0 < t2 then fim_so_set
+    blt t0, zero, fim_do_set # if t0 < zero then fim_so_set
     addi a0, a0, 1 # a0 = a0 + 1
 
-    beq t0, t2, set_base# if t0 == t1 then base
+    beq t0, zero, set_base# if t0 == zero then base
     beq t0, t4, set_mid # if t0 == t4 then mid
 
     set_top:
@@ -98,7 +97,7 @@ set_servo_angles: #Código: 17
         addi a0, a0, 1; # a0 = a0 + 1
 
         li t5, 0xFFFF001C
-        sw t1, 0(t5) # guarda o angulo
+        sb t1, 0(t5) # guarda o angulo
         j fim_do_set  # jump to fim_do_set
         
     set_mid:
@@ -109,7 +108,7 @@ set_servo_angles: #Código: 17
         addi a0, a0, 1; # a0 = a0 + 1
 
         li t5, 0xFFFF001D
-        sw t1, 0(t5) # guarda o angulo
+        sb t1, 0(t5) # guarda o angulo
         j fim_do_set  # jump to fim_do_set
 
     set_base:
@@ -120,7 +119,7 @@ set_servo_angles: #Código: 17
         addi a0, a0, 1 # a0 = a0 + 1
 
         li t5, 0xFFFF001E
-        sw t1, 0(t5) # guarda o angulo
+        sb t1, 0(t5) # guarda o angulo
 
     fim_do_set:
     j pos_a0  # jump to pos_a0
@@ -145,12 +144,12 @@ set_engine_torque: #Código: 18
 
     set_engine_0:
         li a0, 0 # a0 = 0
-        sw t1, 0(s1) # guarda o torque
+        sh t1, 0(s1) # guarda o torque
         j pos_a0  # jump to pos_a0
 
     set_engine_1:
         li a0, 0 # a0 = 0
-        sw t1, 0(s2) # guarda o torque
+        sh t1, 0(s2) # guarda o torque
         j pos_a0  # jump to pos_a0
 
 read_gps: #Código: 19
@@ -249,7 +248,7 @@ write: #Código: 64
         sb t4, 0(t2)
         sw t0, 0(t1)
         espera:
-            lw t5, 0(t1)
+            lb t5, 0(t1)
             bne t5, zero, espera # if t5 != zero then espera
         addi t3, t3, 1; # t3 = t3 + 1
         addi t1, t1, 1; # t1 = t1 + 1
@@ -261,15 +260,15 @@ GPT: #interrupcao externa (clock)
     li t0, 0xFFFF0100
     li t1, 0xFFFF0104
     li t2, 100
-    lw t3, 0(t1)
+    lb t3, 0(t1)
     la t4, clock
-    lw t5, 0(t5)  
+    lw t5, 0(t4)  
      
     beq zero, t3, recupera_contexto # interrupcao falsa
 
     addi t5, t5, 100 # incrementa clock
     sw t2, 0(t0)  
-    sw zero, 0(t1)  
+    sb zero, 0(t1)  
     
 recupera_contexto:
     lw a0, 0(t6)
@@ -326,8 +325,8 @@ sw t2, 0(t0)
 #set motors
 li t0, 0xFFFF0018
 li t1, 0xFFFF001A
-lw zero, 0(t0)
-lw zero, 0(t1)  
+lb zero, 0(t0)
+lb zero, 0(t1)  
 
 #set articulacoes
 li t0, 0xFFFF001E
@@ -337,9 +336,9 @@ li t3, 31
 li t4, 80
 li t5, 78
 
-sw t3, 0(t0)
-sw t4, 0(t1)  
-sw t5, 0(t2)
+sb t3, 0(t0)
+sb t4, 0(t1)  
+sb t5, 0(t2)
 
 # Configura o tratador de interrupções
 la t0, tratador_de_interrupcoes # Grava o endereço do rótulo int_handler
