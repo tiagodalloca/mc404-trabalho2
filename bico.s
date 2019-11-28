@@ -1,14 +1,12 @@
-# TODO: testar
-
-.globl set_engine_torque # funfa
-.globl set_torque # funfa
+.globl set_engine_torque
+.globl set_torque
 .globl set_head_servo
 .globl get_us_distance
-.globl get_time # funfa
-.globl set_time # funfa
+.globl get_time
+.globl set_time
 .globl get_current_GPS_position
 .globl get_gyro_angles
-.globl puts # funfa
+.globl puts
 
 set_engine_torque:
 	li a7, 18
@@ -16,6 +14,8 @@ set_engine_torque:
 	ret
 
 set_torque:
+	# chama as funcao set_engine_torque
+	# para cada motor
 	addi sp, sp, -12
 	sw a0, 8(sp)
 	sw a1, 4(sp)
@@ -56,35 +56,11 @@ set_time:
 	ret
 
 get_current_GPS_position:
-	mv t0, a0
-	addi a0, a0, 4
-	mv t1, a0
-	addi a0, a0, 4
-	mv t2, a0
-	
-	slli t0, t0, 20
-	slli t1, t1, 10
-	or t0, t0, t1
-	or t0, t0, t2
-	
-	mv a0, t0
 	li a7, 19
 	ecall
 	ret
 
-get_gyro_angles:
-	mv t0, a0
-	addi a0, a0, 4
-	mv t1, a0
-	addi a0, a0, 4
-	mv t2, a0
-	
-	slli t0, t0, 20
-	slli t1, t1, 10
-	or t0, t0, t1
-	or t0, t0, t2
-	
-	mv a0, t0
+get_gyro_angles:	
 	li a7, 20
 	ecall
 	ret

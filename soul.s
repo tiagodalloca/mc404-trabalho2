@@ -66,8 +66,8 @@ read_ultrasonic_sensor: #Código: 16
     li t0, 0xFFFF0020
     sw zero, 0(t0)
     medir_sensor:
-        lw t0, 0(t0)
-        beq t0, zero, medir_sensor # if t0 != zero then medir_sensor
+        lw t1, 0(t0)
+        beq t1, zero, medir_sensor # if t0 != zero then medir_sensor
     li t0, 0xFFFF0024  
     lw a0, 0(t0) #coloca o valor do sensor em a0 
     j pos_a0  # jump to pos_a0
@@ -153,16 +153,10 @@ set_engine_torque: #Código: 18
 
 read_gps: #Código: 19
 
-    #t0 = pos x
-    srli t0, a0, 20
-
-    #t1 = pos y
-    slli t1, a0, 12
-    srli t1, t1, 22
-
-    #t2 = pos z
-    slli t2, a0, 22
-    srli t2, t2, 22
+    li s3, 0xFFFF0004
+    li s4, 0xFFFF0008 
+    li s5, 0xFFFF000C 
+    li s6, 0xFFFF0010
 
     chama_o_gps:
         sw zero, 0(s3)
@@ -177,9 +171,9 @@ read_gps: #Código: 19
     #s4 = z
     lw s4, 0(s6)	 
     
-    sw t4, 0(t0) #guarda o x
-    sw t5, 0(t1) #guarda o y
-    sw s4, 0(t2) #guarda o z
+    sw t4, 0(a0) #guarda o x
+    sw t5, 4(a0) #guarda o y
+    sw s4, 8(a0) #guarda o z
     
     j recupera_contexto  # jump to recupera_contexto
 
@@ -188,17 +182,6 @@ read_gyroscope: #Código: 20
 
     li s1, 0xFFFF0004 
     li s2, 0xFFFF0014
-
-    #t0 = pos x
-    srli t0, a0, 20
-
-    #t1 = pos y
-    slli t1, a0, 12
-    srli t1, t1, 22
-
-    #t2 = pos z
-    slli t2, a0, 22
-    srli t2, t2, 22
 
     chama_a_leitura:
         sw zero, 0(s1)
@@ -219,9 +202,9 @@ read_gyroscope: #Código: 20
     slli s4, t3, 22
     srli s4, s4, 22
 
-    sw t4, 0(t0) #guarda o x
-    sw t5, 0(t1) #guarda o y
-    sw s4, 0(t2) #guarda o z
+    sw t4, 0(a0) #guarda o x
+    sw t5, 4(a0) #guarda o y
+    sw s4, 8(a0) #guarda o z
     j recupera_contexto  # jump to recupera_contexto
 
 get_time: #Código: 21
