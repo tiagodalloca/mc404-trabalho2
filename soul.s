@@ -35,6 +35,8 @@ guarda_contexto:
     
 
 Verifica_qual_e_a_syscall:
+    csrr t5, mcause
+    blt t5, zero, GPT # if t0 < t1 then GPT
 
     li t0, 64 # t0 = 64
     beq t0, a7, write # if t0 == a7 then write
@@ -59,9 +61,6 @@ Verifica_qual_e_a_syscall:
 
     li t0, 16 # t0 = 16
     beq t0, a7, read_ultrasonic_sensor # if t0 == a7 then read_ultrasonic_sensorx
-
-    blt a7, zero, GPT # if t0 < t1 then GPT
-
 
 read_ultrasonic_sensor: #Código: 16
     li t0, 0xFFFF0020
@@ -247,51 +246,61 @@ write: #Código: 64
         li t2, 0xFFFF0109
         li t3, 0
 
+    escrevendo:
         lb t4, 0(a1)
+        sb t0, 0(t1)
         sb t4, 0(t2)
-        sw t0, 0(t1)
         esperae:
             lb t5, 0(t1)
             bne t5, zero, esperae # if t5 != zero then esperae
         addi t3, t3, 1; # t3 = t3 + 1
         addi a1, a1, 1
-        bne t3, a2, escreve # if t3 != a2 then escreve
+        bne t3, a2, escrevendo # if t3 != a2 then escreve
         mv  a0, a2 # a0 = a2
 
     j pos_a0  # jump to pos_a0
 
     le:
-        li t0, 1 # t0 = 1
+        li t0, 1 # t0 = 1   
         li t1, 0xFFFF010A
         li t2, 0xFFFF010B
         li t3, 0
 
+    lendo:
         lb t4, 0(a1)
         sb t4, 0(t2)
-        sw t0, 0(t1)
+        sb t0, 0(t1)
         esperal:
             lb t5, 0(t1)
             bne t5, zero, esperal # if t5 != zero then esperal
         addi t3, t3, 1; # t3 = t3 + 1
         addi a1, a1, 1
-        bne t3, a2, le # if t3 != a2 then escreve
+        bne t3, a2, lendo # if t3 != a2 then escreve
         mv  a0, a2 # a0 = a2
 
     j pos_a0  # jump to pos_a0
 
 GPT: #interrupcao externa (clock)
-    li t0, 0xFFFF0100
+
+    
     li t1, 0xFFFF0104
-    li t2, 100
     lb t3, 0(t1)
+    beq zero, t3, pula_GPT # interrupcao falsa
+
+    li t0, 0xFFFF0100
+    li t2, 100
     la t4, clock
     lw t5, 0(t4)  
-     
-    beq zero, t3, recupera_contexto # interrupcao falsa
 
     addi t5, t5, 100 # incrementa clock
-    sw t2, 0(t0)  
-    sb zero, 0(t1)  
+    sb zero, 0(t1)
+    sw t2, 0(t0)
+    sw t5, 0(t4)
+
+    pula_GPT:
+    lw a0, 0(t6)
+    j pula_a0
+
     
 recupera_contexto:
     lw a0, 0(t6)
@@ -301,7 +310,7 @@ recupera_contexto:
     addi t0, t0, 4 # soma 4 no enderecoo de retorno (para retornar a ecall) 
     csrw mepc, t0  # armazena endereco de retorno de volta no mepc
 
-
+    pula_a0:
     lw tp, 116(t6)   
     lw gp, 112(t6)     
     lw sp, 108(t6)
@@ -348,8 +357,8 @@ sw t2, 0(t0)
 #set motors
 li t0, 0xFFFF0018
 li t1, 0xFFFF001A
-lb zero, 0(t0)
-lb zero, 0(t1)  
+sb zero, 0(t0)
+sb zero, 0(t1)  
 
 #set articulacoes
 li t0, 0xFFFF001E
@@ -358,7 +367,6 @@ li t2, 0xFFFF001C
 li t3, 31
 li t4, 80
 li t5, 78
-
 sb t3, 0(t0)
 sb t4, 0(t1)  
 sb t5, 0(t2)

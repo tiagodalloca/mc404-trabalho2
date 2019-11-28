@@ -1,14 +1,14 @@
 # TODO: testar
 
-.globl set_engine_torque
-.globl set_torque
+.globl set_engine_torque # funfa
+.globl set_torque # funfa
 .globl set_head_servo
 .globl get_us_distance
-.globl get_time
-.globl set_time
+.globl get_time # funfa
+.globl set_time # funfa
 .globl get_current_GPS_position
 .globl get_gyro_angles
-.globl puts
+.globl puts # funfa
 
 set_engine_torque:
 	li a7, 18
